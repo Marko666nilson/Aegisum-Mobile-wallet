@@ -14,6 +14,7 @@ const createRateLimit = (windowMs, max, message) => {
         },
         standardHeaders: true,
         legacyHeaders: false,
+        trustProxy: false, // Disable trust proxy for rate limiting
         handler: (req, res) => {
             logger.warn('Rate limit exceeded', {
                 ip: req.ip,
@@ -92,19 +93,7 @@ const trackIP = async (req, res, next) => {
 
 // Security headers middleware
 const securityHeaders = helmet({
-    contentSecurityPolicy: {
-        directives: {
-            defaultSrc: ["'self'"],
-            styleSrc: ["'self'", "'unsafe-inline'"],
-            scriptSrc: ["'self'"],
-            imgSrc: ["'self'", "data:", "https:"],
-            connectSrc: ["'self'"],
-            fontSrc: ["'self'"],
-            objectSrc: ["'none'"],
-            mediaSrc: ["'self'"],
-            frameSrc: ["'none'"],
-        },
-    },
+    contentSecurityPolicy: false, // Temporarily disable CSP for testing
     crossOriginEmbedderPolicy: false,
     hsts: {
         maxAge: 31536000,

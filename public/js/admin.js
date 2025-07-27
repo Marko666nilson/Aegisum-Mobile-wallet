@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Show login modal
 function showLoginModal() {
+    // Wait for Bootstrap to load
+    if (typeof bootstrap === 'undefined') {
+        setTimeout(showLoginModal, 100);
+        return;
+    }
     const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
     loginModal.show();
 }
@@ -47,7 +52,9 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             localStorage.setItem('adminToken', authToken);
             document.getElementById('adminUsername').textContent = data.data.username;
             
-            bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+            if (typeof bootstrap !== 'undefined') {
+                bootstrap.Modal.getInstance(document.getElementById('loginModal')).hide();
+            }
             showDashboard();
             loadDashboardStats();
             showToast('Login successful', 'success');
